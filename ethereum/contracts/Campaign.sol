@@ -1,15 +1,32 @@
 pragma solidity ^0.4.17;
+pragma experimental ABIEncoderV2;
 
 contract CampaignFactory {
     address[] public deployedCampaign;
-
+    string[] public Name;
+    string[] public description;
+    uint256[] public donation;
+    uint256[] public Minimun;
     function createCampaign(string name, string desc, uint256 minimum, uint256 totalDonation) public {
         address newCampaign = new Campaign(msg.sender, name, desc, minimum, totalDonation);
+        Name.push(name);
+        description.push(desc);
+        Minimun.push(minimum);
+        donation.push(totalDonation);
         deployedCampaign.push(newCampaign);
     }
 
-    function getDeployedCampaigns() public view returns (address[]) {
-        return deployedCampaign;
+    function getDeployedCampaigns() public view returns (address[], string[], string[], uint256[], uint256[]) {
+        return(
+            deployedCampaign,
+            Name,
+            description,
+            donation,
+            Minimun);
+        
+    }
+    function getBalance(address campaignAddress) public view returns(uint256){
+        return campaignAddress.balance;
     }
 }
 
@@ -136,3 +153,4 @@ contract Campaign {
         return this.balance;
     }
 }
+

@@ -17,11 +17,10 @@ class CampaignNew extends Component {
 
   onSubmit = async (event) => {
     event.preventDefault();
-
+   
     this.setState({ loading: true });
     try {
       const accounts = await web3.eth.getAccounts();
-      const donation = web3.get      
 
       await factory.methods
         .createCampaign(this.state.name,this.state.desc,this.state.minimumContribution,
@@ -35,11 +34,12 @@ class CampaignNew extends Component {
       this.setState({ errorMessage: err.message });
     }
     this.setState({ loading: false });
-    
+    this.props.handleClose();
   };
 
   render() {
     return (
+      
       <Segment>
         <h3>Create a Campaign</h3>
         <h4>Enter Details</h4>
