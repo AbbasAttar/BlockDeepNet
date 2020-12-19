@@ -12,8 +12,8 @@ class HeaderClass extends Component{
 
   render(){
     return (
-      <Segment style={{ marginTop: "10px", paddingBottom: "5px" }} clearing>
-        <Header as="h2" floated="left">
+      <div style={{ margin: "10px", paddingBottom: "10px", height: "60px"}} clearing>
+        <Header as="h1" floated="left">
           <Link route="/">
             <div className="item" style={{ cursor: "pointer" }}>
               BlockDeepNet
@@ -21,7 +21,7 @@ class HeaderClass extends Component{
           </Link>
         </Header>
         <Header as="h3" floated="right">
-          <Button content="Create Campaign" icon="add circle" primary onClick= {this.handleOpen} />
+          <Button content="Create Campaign" style={{ backgroundColor: "transparent"}} onClick= {this.handleOpen} />
           <Modal
             closeIcon
             open={this.state.modalOpen}
@@ -36,8 +36,14 @@ class HeaderClass extends Component{
   
             
           </Modal>
+          <Link route="/Login">
+            <Button content="Login" style={{ backgroundColor: "transparent"}}/>
+          </Link>
+          
+          <Button content="Sign up"style={{ backgroundColor: "transparent"}}/>
         </Header>
-      </Segment>
+        <br />
+      </div> 
     );
   }
 }

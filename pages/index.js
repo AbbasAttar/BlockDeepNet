@@ -4,7 +4,8 @@ import { Card } from "semantic-ui-react";
 import Layout from "../components/Layout";
 import { Link } from "../routes";
 import web3 from "../ethereum/web3";
-import ContributeForm from "../components/ContributeForm";
+import Carousel from "../components/Carousel"
+// import ContributeForm from "../components/ContributeForm";
 
 class CampaignIndex extends Component {
   static async getInitialProps() {
@@ -26,26 +27,25 @@ class CampaignIndex extends Component {
       items.push({
         header: name[i],
         description: (
-          <div>
-            <div style={{fontsize : "18px"}}>
-              <h5>
-                <br/>
-              <div>Address: {address[i]}</div>
-              <div>Minimum: {minimum[i]} wei</div>
-              <div>Required Donation: {web3.utils.fromWei(donation[i],"ether")} ether</div>
-              </h5>
-            </div>
+          <div style={{fontsize : "18px", width: "220px", height: "200px"}}>
             <div>
-              <br/>
-              <ContributeForm address={address[i]} /><br/>
+              <div>
+                <h5>
+                  <br/>
+                <div>Minimum: {minimum[i]} wei</div>
+                <div>Required Donation: {web3.utils.fromWei(donation[i],"ether")} ether</div>
+                </h5>
+              </div>
+            </div>
+            <div style={{position: "absolute", bottom: "10px"}}>
               <Link route={`/campaigns/${address[i]}`}>
                 <a>View Campaign</a>
               </Link>
             </div>
-          </div>
+        </div>
         ),
         meta: (<div><i>{desc[i]}</i></div>),
-        fluid: true,
+        fluid: false,
         },
       );
     }
@@ -62,15 +62,15 @@ class CampaignIndex extends Component {
     //   };
     // });
 
-    return <Card.Group items={items} />;
+    return <Card.Group items={items} style={{paddingLeft: "10%", marginLeft: "6px"}}/>;
   }
 
   render() {
     return (
       <Layout>
         <div>
-          <h2>Projects</h2>
-          {this.renderCampaigns()}
+          <Carousel />
+           {this.renderCampaigns()}
         </div>
       </Layout>
     );
