@@ -1,27 +1,33 @@
 import  React  from  'react';
 import  Carousel  from  'semantic-ui-carousel-react';
-import { Image, Button } from  'semantic-ui-react'
+import { Image } from  'semantic-ui-react';
+// import Image from "next/image";
+
 const  App  = () => {
 	let  elements  = [
 		{
 			render:()=>{
-				return <Button  fluid>1111111</Button>
+				return (
+					<Image src="/Image1.jpg" alt="img1" id="img1" width="1127px" height="500px" />
+                );
 			}
 		},
 		{
 			render:()=>{
-				return <Button  fluid>2222222</Button>
+				return (
+						<Image src="/Image1.jpg" alt="img1" id="img1" width="1127px" height="500px" />
+					);
 			}
 	    },
 	]
 	return (
-		<div>
+		<div >
 			<Carousel
 				elements  =  {  elements  }
-				duration  ={3000}
+				duration  ={10000}
 				animation  ='slide left'
 				showNextPrev  =  {false}
-				showIndicators  ={true}
+				showIndicators ={false}
 			/>
 		</div>
 	)

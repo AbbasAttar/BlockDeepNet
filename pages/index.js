@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import factory from "../ethereum/factory";
-import { Card } from "semantic-ui-react";
+import { Card,Segment } from "semantic-ui-react";
 import Layout from "../components/Layout";
 import { Link } from "../routes";
 import web3 from "../ethereum/web3";
-import Carousel from "../components/Carousel"
+import Image from "next/image"
+import Carousel from "../components/Carousel";
 // import ContributeForm from "../components/ContributeForm";
 
 class CampaignIndex extends Component {
@@ -25,18 +26,10 @@ class CampaignIndex extends Component {
 
     for(var i = 0; i< this.props.campaigns[0].length; i++){
       items.push({
+        
         header: name[i],
         description: (
-          <div style={{fontsize : "18px", width: "220px", height: "200px"}}>
-            <div>
-              <div>
-                <h5>
-                  <br/>
-                <div>Minimum: {minimum[i]} wei</div>
-                <div>Required Donation: {web3.utils.fromWei(donation[i],"ether")} ether</div>
-                </h5>
-              </div>
-            </div>
+          <div style={{fontsize : "18px", width: "220px", height: "50px"}}>
             <div style={{position: "absolute", bottom: "10px"}}>
               <Link route={`/campaigns/${address[i]}`}>
                 <a>View Campaign</a>
@@ -50,18 +43,6 @@ class CampaignIndex extends Component {
       );
     }
 
-    // const items = address.map((item) => {
-    //   return {
-    //     header: item,
-    //     description: (
-    //         <Link route={`/campaigns/${item}`}>
-    //           <a>View Campaign</a>
-    //         </Link>
-    //     ),
-    //     fluid: true,
-    //   };
-    // });
-
     return <Card.Group items={items} style={{paddingLeft: "10%", marginLeft: "6px"}}/>;
   }
 
@@ -69,8 +50,25 @@ class CampaignIndex extends Component {
     return (
       <Layout>
         <div>
-          <Carousel />
+          {/* <Carousel /> */}
+          <div style={{display: "flex"}}>
+            <div style={{flex: "1"
+              }}>
+              <h1>BlockDeepNet</h1>
+              <p>A new way of Crowdfunding</p>
+            </div>
+            <Image 
+              src="/coverpage.svg" 
+              width="600px" 
+              height="400px" 
+              style={{ margin: "20px", flex:"1"}} 
+            />
+          </div>
+          
+          <Segment>
+            <h2 style={{marginBottom: "30px", textAlign: "center"}}>Latest Projects</h2>
            {this.renderCampaigns()}
+          </Segment>
         </div>
       </Layout>
     );
