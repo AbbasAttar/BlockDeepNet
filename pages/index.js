@@ -5,8 +5,6 @@ import Layout from "../components/Layout";
 import { Link } from "../routes";
 import web3 from "../ethereum/web3";
 import Image from "next/image"
-import Carousel from "../components/Carousel";
-// import ContributeForm from "../components/ContributeForm";
 
 class CampaignIndex extends Component {
   static async getInitialProps() {
@@ -50,8 +48,7 @@ class CampaignIndex extends Component {
     return (
       <Layout>
         <div>
-          {/* <Carousel /> */}
-          <div style={{display: "flex"}}>
+          {/* <div style={{display: "flex"}}>
             <div style={{flex: "1"
               }}>
               <h1>BlockDeepNet</h1>
@@ -63,7 +60,7 @@ class CampaignIndex extends Component {
               height="400px" 
               style={{ margin: "20px", flex:"1"}} 
             />
-          </div>
+          </div> */}
           
           <Segment>
             <h2 style={{marginBottom: "30px", textAlign: "center"}}>Latest Projects</h2>

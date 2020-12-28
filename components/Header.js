@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import { Header, Button, Segment, Modal, Icon } from "semantic-ui-react";
+import { Header, Button } from "semantic-ui-react";
 import { Link } from "../routes";
-import NewCampain from '../pages/NewCampain';
+// import NewCampain from '../pages/NewCampain';
 
 class HeaderClass extends Component{
 

@@ -13,7 +13,6 @@ export default (props) => {
           integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ=="
           crossOrigin="anonymous"
         />
-        
       </Head>
       <Header />
       {props.children}
