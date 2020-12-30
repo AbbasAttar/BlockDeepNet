@@ -3,9 +3,9 @@ import Header from "./Header";
 import { Container } from "semantic-ui-react";
 import Head from "next/head";
 
-export default (props) => {
+const Layout = (props) => {
   return (
-    <Container style={{margin: "20px"}}>
+    <Container style={{ margin: "20px" }}>
       <Head>
         <link
           rel="stylesheet"
@@ -19,3 +19,5 @@ export default (props) => {
     </Container>
   );
 };
+
+export default Layout;
