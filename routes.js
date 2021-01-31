@@ -6,6 +6,6 @@ routes
   .add("/campaigns/:address/requests", "/campaigns/requests/index")
   .add("/campaigns/:address/requests/new", "/campaigns/requests/new")
   .add("/Login", "/Login")
-  .add("/newCampaign", "/NewCampain");
+  .add("/Signup", "/Signup");
 
 module.exports = routes;

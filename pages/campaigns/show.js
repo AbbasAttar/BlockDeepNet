@@ -11,7 +11,7 @@ class CampaignShow extends Component {
     const campaign = Campaign(props.query.address);
 
     const summary = await campaign.methods.getSummary().call();
-    
+
     return {
       address: props.query.address,
       minimumContribution: summary[0],
@@ -19,8 +19,6 @@ class CampaignShow extends Component {
       requestCount: summary[2],
       approversCount: summary[3],
       manager: summary[4],
-      name: summary[5],
-      Description: summary[6],
     };
   }
 
@@ -31,18 +29,8 @@ class CampaignShow extends Component {
       minimumContribution,
       requestCount,
       approversCount,
-      name,
-      Description
     } = this.props;
     const items = [
-      {
-        header: name,
-        meta: "Name of Campaign",
-        description: Description,
-        style:{
-          overflowWrap: "breal-word",
-        }
-      },
       {
         header: manager,
         meta: "Address of Manager",

@@ -1,31 +1,20 @@
 pragma solidity ^0.4.17;
-pragma experimental ABIEncoderV2;
 
 contract CampaignFactory {
     address[] public deployedCampaign;
-    string[] public Name;
-    string[] public description;
-    uint256[] public donation;
     uint256[] public Minimun;
-    function createCampaign(string name, string desc, uint256 minimum, uint256 totalDonation) public {
-        address newCampaign = new Campaign(msg.sender, name, desc, minimum, totalDonation);
-        Name.push(name);
-        description.push(desc);
+
+    function createCampaign(uint256 minimum) public {
+        address newCampaign = new Campaign(msg.sender, minimum);
         Minimun.push(minimum);
-        donation.push(totalDonation);
         deployedCampaign.push(newCampaign);
     }
 
-    function getDeployedCampaigns() public view returns (address[], string[], string[], uint256[], uint256[]) {
-        return(
-            deployedCampaign,
-            Name,
-            description,
-            donation,
-            Minimun);
-        
+    function getDeployedCampaigns() public view returns (address[], uint256[]) {
+        return (deployedCampaign, Minimun);
     }
-    function getBalance(address campaignAddress) public view returns(uint256){
+
+    function getBalance(address campaignAddress) public view returns (uint256) {
         return campaignAddress.balance;
     }
 }
@@ -43,73 +32,64 @@ contract Campaign {
     Request[] public requests;
     address public manager;
     uint256 public minimumContribution;
-    string public campaignDescription;
-    string public name;
-    uint256 public donation;
-    mapping(address => bool) public approvers;
-    uint256 public approversCount;
-    
+    mapping(address => bool) public backers;
+    uint256 public backersCount;
+    bool close = false;
 
     modifier restricted() {
         require(msg.sender == manager);
         _;
     }
 
-    function Campaign(
-        address creator,
-        string n,
-        string desc,
-        uint256 minimum,
-        uint256 totalDonation
-       
-        ) public {
-      
-        manager = creator;
-        minimumContribution = minimum;
-        campaignDescription = desc;
-        name = n;
-        donation = totalDonation;
-        
+    modifier notClose() {
+        require(close == false);
+        _;
     }
 
-    function contribute() public payable {
-        require(msg.sender!=manager);
+    function Campaign(address creator, uint256 minimum) public {
+        manager = creator;
+        minimumContribution = minimum;
+    }
+
+    function contribute() public payable notClose {
+        require(msg.sender != manager);
         require(msg.value >= minimumContribution);
-        require(!approvers[msg.sender]);
-        approvers[msg.sender] = true;
-        approversCount++;
+        require(!backers[msg.sender]);
+        backers[msg.sender] = true;
+        backersCount++;
     }
 
     function createRequest(
         string description,
         uint256 value,
         address recipient
-    ) public restricted {
-        Request memory newRequest = Request({
-            description: description,
-            value: value,
-            recipient: recipient,
-            complete: false,
-            approvalCount: 0
-        });
+    ) public restricted notClose {
+        Request memory newRequest =
+            Request({
+                description: description,
+                value: value,
+                recipient: recipient,
+                complete: false,
+                approvalCount: 0
+            });
 
         requests.push(newRequest);
     }
 
-    function approveRequest(uint256 index) public {
+    function approveRequest(uint256 index) public notClose {
         Request storage request = requests[index];
 
-        require(approvers[msg.sender]);
+        require(backers[msg.sender]);
         require(!request.approvals[msg.sender]);
 
         request.approvals[msg.sender] = true;
         request.approvalCount++;
     }
 
-    function finalizeRequest(uint256 index) public restricted {
+    function finalizeRequest(uint256 index) public restricted notClose {
         Request storage request = requests[index];
         require(!request.complete);
-        require(request.approvalCount > (approversCount / 2));
+        require(request.approvalCount > (backersCount / 2));
 
         request.recipient.transfer(request.value);
         request.complete = true;
@@ -123,34 +103,27 @@ contract Campaign {
             uint256,
             uint256,
             uint256,
-            address,
-            string,
-            string
+            address
         )
     {
         return (
             minimumContribution,
             this.balance,
             requests.length,
-            approversCount,
-            manager,
-            name,
-            campaignDescription
+            backersCount,
+            manager
         );
     }
 
     function getRequestCount() public view returns (uint256) {
         return requests.length;
     }
-    
-    function checkContribution() public view returns (bool){
-        if(this.balance != donation){
-            return false;
-        }
-        return true;
-    }
-    function totalBalance() public view returns(uint256){
+
+    function totalBalance() public view returns (uint256) {
         return this.balance;
     }
-}
 
+    function closeCampaign() public restricted {
+        close = true;
+    }
+}

@@ -10,7 +10,7 @@ class RequestIndex extends Component {
     const { address } = props.query;
     const campaign = Campaign(address);
     const requestCount = await campaign.methods.getRequestCount().call();
-    const approversCount = await campaign.methods.approversCount().call();
+    const approversCount = await campaign.methods.backersCount().call();
 
     const requests = await Promise.all(
       Array(parseInt(requestCount))
@@ -41,25 +41,21 @@ class RequestIndex extends Component {
     const { Header, Row, HeaderCell, Body } = Table;
     return (
       <Layout>
-        <Segment> 
-          <div style={{display: "flex"}}>
-            <h3 style={{flex: "1"}}>Requests</h3>
+        <Segment>
+          <div style={{ display: "flex" }}>
+            <h3 style={{ flex: "1" }}>Requests</h3>
             <Link route={`/campaigns/${this.props.address}/requests/new`}>
               <a>
-                <Button primary>
-                  Add Request
-                </Button>
+                <Button primary>Add Request</Button>
               </a>
-            </Link> 
+            </Link>
             <Link route={`/campaigns/${this.props.address}`}>
               <a>
-                <Button>
-                  Back
-                </Button>
+                <Button>Back</Button>
               </a>
             </Link>
           </div>
-          
+
           <Table>
             <Header>
               <Row>
@@ -74,7 +70,7 @@ class RequestIndex extends Component {
             </Header>
             <Body>{this.renderRow()}</Body>
           </Table>
-          <div>Found {this.props.requestCount} request</div>  
+          <div>Found {this.props.requestCount} request</div>
         </Segment>
       </Layout>
     );
