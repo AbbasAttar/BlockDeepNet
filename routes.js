@@ -5,7 +5,7 @@ routes
   .add("/campaigns/:address", "/campaigns/show")
   .add("/campaigns/:address/requests", "/campaigns/requests/index")
   .add("/campaigns/:address/requests/new", "/campaigns/requests/new")
-  .add("/Login", "/Login")
-  .add("/Signup", "/Signup");
+  .add("/usr/:address/created", "/usr/created")
+  .add("/usr/:address/backed", "/usr/backed");
 
 module.exports = routes;

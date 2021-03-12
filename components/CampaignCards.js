@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card } from "semantic-ui-react";
+import { Button, Card } from "semantic-ui-react";
 import firebase from "./firebase";
 import { Link } from "../routes";
 
@@ -19,17 +19,14 @@ export default class CampaignCards extends Component {
           });
           this.setState({
             items: this.state.items.concat({
+              image: doc.data().url,
               header: doc.data().Name,
-              description: (
-                <div
-                  style={{ fontsize: "18px", width: "220px", height: "50px" }}
-                >
-                  <div style={{ position: "absolute", bottom: "10px" }}>
-                    <Link route={`/campaigns/${doc.id}`}>
-                      <a>View Campaign</a>
-                    </Link>
-                  </div>
-                </div>
+              extra: (
+                <Link route={`/campaigns/${doc.id}`}>
+                  <a>
+                    <Button primary>View Campaign</Button>
+                  </a>
+                </Link>
               ),
               meta: (
                 <div>

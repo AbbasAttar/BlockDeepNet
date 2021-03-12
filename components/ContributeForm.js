@@ -3,8 +3,10 @@ import { Form, Input, Message, Button } from "semantic-ui-react";
 import Campaign from "../ethereum/campaign";
 import web3 from "../ethereum/web3";
 import { Router } from "../routes";
-
+import { LoginContext } from "./LoginContext";
+import firebase from "./firebase";
 class ContributeForm extends Component {
+  static contextType = LoginContext;
   state = {
     value: "",
     loading: false,
@@ -15,11 +17,22 @@ class ContributeForm extends Component {
     event.preventDefault();
     const campaign = Campaign(this.props.address);
     this.setState({ loading: true, errorMessage: "" });
+    const userRef = firebase.firestore().collection("UserDetails");
+    const { userName, userPAddress } = this.context;
     try {
+      if (userName === "" || userName === "undefined") {
+        throw new Error(
+          "You are not logged in. Login or Signup to contribute in a campaign"
+        );
+      }
       const accounts = await web3.eth.getAccounts();
       await campaign.methods.contribute().send({
         from: accounts[0],
         value: web3.utils.toWei(this.state.value, "ether"),
+      });
+
+      userRef.doc(userPAddress).update({
+        backed: firebase.firestore.FieldValue.arrayUnion(this.props.address),
       });
 
       Router.replaceRoute(`/campaigns/${this.props.address}`);
@@ -28,7 +41,6 @@ class ContributeForm extends Component {
     }
 
     this.setState({ loading: false, value: "" });
- 
   };
 
   render() {
