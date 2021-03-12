@@ -1,5 +1,5 @@
-factory
-firebase
+factory.js
+firebase.js
 node_modules
 ngrok
 .next
