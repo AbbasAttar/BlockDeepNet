@@ -14,6 +14,5 @@ const firebaseConfig = {
 
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
-  console.log(process.env.ContractAddress);
 }
 export default firebase;

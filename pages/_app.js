@@ -9,7 +9,6 @@ import { Container } from "semantic-ui-react";
 function myApp({ Component, pageProps }) {
   const [userName, setUserName] = useState("");
   const [userPAddress, setUserPAddress] = useState("");
-  console.log("This is from myApp");
   return (
     <LoginContext.Provider
       value={{ userName, userPAddress, setUserName, setUserPAddress }}

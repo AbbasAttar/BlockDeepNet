@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Header, Button, Dropdown, Confirm } from "semantic-ui-react";
-import { Link } from "../routes";
+import { Link, Router } from "../routes";
 import LoginModel from "./LoginModel";
 import SignupModel from "./SignupModel";
 import { LoginContext } from "./LoginContext";
@@ -19,7 +19,6 @@ const HeaderComponent = () => {
         paddingBottom: "10px",
         height: "60px",
       }}
-      clearing
     >
       <Header as="h1" floated="left">
         <Link route="/">
@@ -61,6 +60,7 @@ const HeaderComponent = () => {
                   confirmButton="Logout"
                   onConfirm={() => {
                     setOpen(false);
+                    Router.pushRoute("/");
                     setUserName("");
                     setUserPAddress("");
                   }}

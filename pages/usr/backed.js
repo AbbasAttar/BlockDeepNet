@@ -36,11 +36,27 @@ export default class Backed extends Component {
                         image: doc.data().url,
                         header: doc.data().Name,
                         extra: (
-                          <Link route={`/campaigns/${doc.id}`}>
-                            <a>
-                              <Button primary>View Campaign</Button>
-                            </a>
-                          </Link>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-around",
+                            }}
+                          >
+                            <Link route={`/campaigns/${doc.id}`}>
+                              <a>
+                                <Button primary size="tini">
+                                  View Campaign
+                                </Button>
+                              </a>
+                            </Link>
+                            <Link route={`/campaigns/${doc.id}/requests`}>
+                              <a>
+                                <Button primary size="tini">
+                                  See Request
+                                </Button>
+                              </a>
+                            </Link>
+                          </div>
                         ),
                         meta: (
                           <div>
@@ -57,7 +73,6 @@ export default class Backed extends Component {
         });
       });
   }
-
   render() {
     this.setItems();
     return (

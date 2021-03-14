@@ -2,13 +2,16 @@ import React, { Component } from "react";
 import firebase from "../../components/firebase";
 import { LoginContext } from "../../components/LoginContext";
 import { Link } from "../../routes";
-import { Button, Card } from "semantic-ui-react";
+import { Button, Card, Confirm } from "semantic-ui-react";
 
 export default class Created extends Component {
   static contextType = LoginContext;
   state = {
     campaigns: [],
     items: [],
+    deleteCampaign: "",
+    deleteURL: "",
+    open: false,
   };
 
   setItems() {
@@ -36,11 +39,41 @@ export default class Created extends Component {
                         image: doc.data().url,
                         header: doc.data().Name,
                         extra: (
-                          <Link route={`/campaigns/${doc.id}`}>
-                            <a>
-                              <Button primary>View Campaign</Button>
-                            </a>
-                          </Link>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-around",
+                            }}
+                          >
+                            <Link route={`/campaigns/${doc.id}`}>
+                              <a>
+                                <Button primary size="tini">
+                                  View Campaign
+                                </Button>
+                              </a>
+                            </Link>
+                            <Link route={`/campaigns/${doc.id}/requests/new`}>
+                              <a>
+                                <Button primary size="tini">
+                                  Add request
+                                </Button>
+                              </a>
+                            </Link>
+
+                            <Button
+                              negative
+                              size="tini"
+                              onClick={() =>
+                                this.setState({
+                                  open: true,
+                                  deleteCampaign: doc.id,
+                                  deleteURL: doc.data().url,
+                                })
+                              }
+                            >
+                              Delete
+                            </Button>
+                          </div>
                         ),
                         meta: (
                           <div>
@@ -58,6 +91,58 @@ export default class Created extends Component {
       });
   }
 
+  handleDelete = async () => {
+    const { userPAddress } = this.context;
+    try {
+      const deleteImageRef = firebase
+        .storage()
+        .refFromURL(this.state.deleteURL);
+      deleteImageRef
+        .delete()
+        .then(() => {
+          console.log("Image Deleted");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
+      const deleteDocRef = firebase
+        .firestore()
+        .collection("CampaignDetail")
+        .doc(this.state.deleteCampaign);
+
+      deleteDocRef
+        .delete()
+        .then(() => {
+          console.log("Document Deleted");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
+      const userRef = firebase
+        .firestore()
+        .collection("UserDetails")
+        .doc(userPAddress);
+      userRef.update({
+        created: firebase.firestore.FieldValue.arrayRemove(
+          this.state.deleteCampaign
+        ),
+      });
+
+      const array = [...this.state.campaigns];
+      const itemArray = [...this.state.items];
+      const index = array.indexOf(this.state.deleteCampaign);
+      if (index !== -1) {
+        array.splice(index, 1);
+        itemArray.splice(index, 1);
+        this.setState({ campaigns: array, items: itemArray });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   render() {
     this.setItems();
     return (
@@ -67,6 +152,17 @@ export default class Created extends Component {
           items={this.state.items}
           itemsPerRow={3}
           style={{ margin: "0px auto" }}
+        />
+        <Confirm
+          open={this.state.open}
+          onCancel={() => {
+            this.setState({ open: false });
+          }}
+          onConfirm={() => {
+            this.handleDelete();
+            this.setState({ open: false });
+            this.setState({ deleteCampaign: "", deleteURL: "" });
+          }}
         />
       </>
     );

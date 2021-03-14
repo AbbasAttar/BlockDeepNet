@@ -10,7 +10,6 @@ import {
 } from "semantic-ui-react";
 import firebase from "../components/firebase";
 import { LoginContext } from "./LoginContext";
-import cookies from "js-cookies";
 
 const SignupModel = () => {
   const { setUserName, setUserPAddress } = useContext(LoginContext);
