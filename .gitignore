@@ -1,6 +1,6 @@
-ethereum/deploy.js
-components/factory.js
-components/firebase.js
+/ethereum/deploy.js
+/ethereum/factory.js
+/components/firebase
 node_modules
 ngrok
 .next
