@@ -34,8 +34,6 @@ const SignupModel = () => {
 
     setUserName(name);
     setUserPAddress(pAddress);
-    cookies.setItem("name", name);
-    cookies.setItem("pAddress", pAddress);
     setsOpen(false);
   }
 

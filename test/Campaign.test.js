@@ -5,8 +5,9 @@ const web3 = new Web3(ganache.provider());
 
 const compiledFactory = require("../ethereum/build/CampaignFactory.json");
 const compiledCampaign = require("../ethereum/build/Campaign.json");
+const { AsyncLocalStorage } = require("async_hooks");
 
-let accounts, factory, campaignAddress, campaign;
+let accounts, factory, campaignAddress, campaign, contribution;
 
 beforeEach(async () => {
   accounts = await web3.eth.getAccounts();
@@ -19,10 +20,11 @@ beforeEach(async () => {
     gas: "1000000",
   });
 
-  [campaignAddress] = await factory.methods.getDeployedCampaigns().call();
+  let result = await factory.methods.getDeployedCampaigns().call();
+
   campaign = await new web3.eth.Contract(
     JSON.parse(compiledCampaign.interface),
-    campaignAddress
+    result[0][0]
   );
 });
 
@@ -42,7 +44,7 @@ describe("Campaigns", () => {
       value: "200",
       from: accounts[1],
     });
-    const isContributor = await campaign.methods.approvers(accounts[1]).call();
+    const isContributor = await campaign.methods.backers(accounts[1]).call();
     assert(isContributor);
   });
 
@@ -71,7 +73,7 @@ describe("Campaigns", () => {
 
   it("Processes requests", async () => {
     await campaign.methods.contribute().send({
-      from: accounts[0],
+      from: accounts[2],
       value: web3.utils.toWei("10", "ether"),
     });
 
@@ -84,7 +86,7 @@ describe("Campaigns", () => {
       .send({ from: accounts[0], gas: "1000000" });
 
     await campaign.methods.approveRequest(0).send({
-      from: accounts[0],
+      from: accounts[2],
       gas: "1000000",
     });
 

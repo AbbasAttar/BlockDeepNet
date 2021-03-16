@@ -37,10 +37,13 @@ class CampaignNew extends Component {
         );
       }
       const accounts = await web3.eth.getAccounts();
+      if (accounts[0] !== userPAddress) {
+        throw new Error("Login with provided Ethereum public address");
+      }
       await factory.methods
         .createCampaign(this.state.minimumContribution)
         .send({
-          from: accounts[0],
+          from: userPAddress,
         });
       const campaigns = await factory.methods.getDeployedCampaigns().call();
       const allId = campaigns[0];
