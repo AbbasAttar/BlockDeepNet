@@ -19,53 +19,76 @@ export default class Backed extends Component {
       .where("pAddress", "==", userPAddress)
       .onSnapshot((querySnapshot) => {
         const user = [];
+        let campaignAddress = "";
         querySnapshot.forEach((doc) => {
           user.push(doc.data());
           if (user[0].backed.length != 0) {
             for (let i = 0; i < user[0].backed.length; i++) {
+              campaignAddress = user[0].backed[i];
               ref
-                .doc(user[0].backed[i])
-                .get()
+                .doc()
+                .get(campaignAddress)
                 .then((doc) => {
-                  if (!this.state.campaigns.includes(doc.id)) {
-                    this.setState({
-                      campaigns: this.state.campaigns.concat(doc.id),
+                  if (doc.data() !== undefined) {
+                    if (!this.state.campaigns.includes(doc.id)) {
+                      this.setState({
+                        campaigns: this.state.campaigns.concat(doc.id),
+                      });
+                      this.setState({
+                        items: this.state.items.concat({
+                          image: doc.data().url,
+                          header: doc.data().Name,
+                          extra: (
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "space-around",
+                              }}
+                            >
+                              <Link route={`/campaigns/${doc.id}`}>
+                                <a>
+                                  <Button primary size="tini">
+                                    View Campaign
+                                  </Button>
+                                </a>
+                              </Link>
+                              <Link route={`/campaigns/${doc.id}/requests`}>
+                                <a>
+                                  <Button primary size="tini">
+                                    See Request
+                                  </Button>
+                                </a>
+                              </Link>
+                            </div>
+                          ),
+                          meta: (
+                            <div>
+                              <i>{doc.data().Description}</i>
+                            </div>
+                          ),
+                          fluid: false,
+                        }),
+                      });
+                    }
+                  } else {
+                    const userRef = firebase
+                      .firestore()
+                      .collection("UserDetails")
+                      .doc(userPAddress);
+                    userRef.update({
+                      backed: firebase.firestore.FieldValue.arrayRemove(
+                        campaignAddress
+                      ),
                     });
-                    this.setState({
-                      items: this.state.items.concat({
-                        image: doc.data().url,
-                        header: doc.data().Name,
-                        extra: (
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-around",
-                            }}
-                          >
-                            <Link route={`/campaigns/${doc.id}`}>
-                              <a>
-                                <Button primary size="tini">
-                                  View Campaign
-                                </Button>
-                              </a>
-                            </Link>
-                            <Link route={`/campaigns/${doc.id}/requests`}>
-                              <a>
-                                <Button primary size="tini">
-                                  See Request
-                                </Button>
-                              </a>
-                            </Link>
-                          </div>
-                        ),
-                        meta: (
-                          <div>
-                            <i>{doc.data().Description}</i>
-                          </div>
-                        ),
-                        fluid: false,
-                      }),
-                    });
+
+                    const array = [...this.state.campaigns];
+                    const itemArray = [...this.state.items];
+                    const index = array.indexOf(campaignAddress);
+                    if (index !== -1) {
+                      array.splice(index, 1);
+                      itemArray.splice(index, 1);
+                      this.setState({ campaigns: array, items: itemArray });
+                    }
                   }
                 });
             }

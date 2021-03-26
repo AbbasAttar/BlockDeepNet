@@ -34,7 +34,10 @@ contract Campaign {
     uint256 public minimumContribution;
     mapping(address => bool) public backers;
     uint256 public backersCount;
-    bool close = false;
+    address[] public backersAddress;
+    uint256[] public contribution;
+    bool public close = false;
+    uint256 public funds = 0;
 
     modifier restricted() {
         require(msg.sender == manager);
@@ -57,6 +60,9 @@ contract Campaign {
         require(!backers[msg.sender]);
         backers[msg.sender] = true;
         backersCount++;
+        backersAddress.push(msg.sender);
+        contribution.push(msg.value);
+        funds = funds + msg.value;
     }
 
     function createRequest(
@@ -123,7 +129,19 @@ contract Campaign {
         return this.balance;
     }
 
-    function closeCampaign() public restricted {
-        close = true;
+    function closeCampaign(bool ans) public restricted {
+        if (ans == true) {
+            close = true;
+            if (this.balance > backersCount * 3000000 && backersCount != 0) {
+                uint256 usedPerHead = (funds - this.balance) / backersCount;
+                for (uint256 i = 0; i < backersCount; i++) {
+                    if (contribution[i] > 3000000) {
+                        backersAddress[i].transfer(
+                            contribution[i] - usedPerHead
+                        );
+                    }
+                }
+            }
+        }
     }
 }

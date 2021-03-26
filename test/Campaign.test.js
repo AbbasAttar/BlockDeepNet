@@ -7,7 +7,7 @@ const compiledFactory = require("../ethereum/build/CampaignFactory.json");
 const compiledCampaign = require("../ethereum/build/Campaign.json");
 const { AsyncLocalStorage } = require("async_hooks");
 
-let accounts, factory, campaignAddress, campaign, contribution;
+let accounts, factory, campaign;
 
 beforeEach(async () => {
   accounts = await web3.eth.getAccounts();

@@ -3,6 +3,8 @@ import firebase from "../../components/firebase";
 import { LoginContext } from "../../components/LoginContext";
 import { Link } from "../../routes";
 import { Button, Card, Confirm } from "semantic-ui-react";
+import Campaign from "../../ethereum/campaign";
+import web3 from "../../ethereum/web3";
 
 export default class Created extends Component {
   static contextType = LoginContext;
@@ -93,51 +95,61 @@ export default class Created extends Component {
 
   handleDelete = async () => {
     const { userPAddress } = this.context;
+    const campaignAddress = this.state.deleteCampaign;
+    const campaignImageURL = this.state.deleteURL;
     try {
-      const deleteImageRef = firebase
-        .storage()
-        .refFromURL(this.state.deleteURL);
-      deleteImageRef
-        .delete()
-        .then(() => {
-          console.log("Image Deleted");
+      console.log("inside delete");
+      const campaign = Campaign(this.state.deleteCampaign);
+      const accounts = await web3.eth.getAccounts();
+      await campaign.methods
+        .closeCampaign(true)
+        .send({
+          from: accounts[0],
         })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      const deleteDocRef = firebase
-        .firestore()
-        .collection("CampaignDetail")
-        .doc(this.state.deleteCampaign);
-
-      deleteDocRef
-        .delete()
         .then(() => {
-          console.log("Document Deleted");
-        })
-        .catch((err) => {
-          console.error(err);
+          const deleteDocRef = firebase
+            .firestore()
+            .collection("CampaignDetail")
+            .doc(campaignAddress);
+
+          deleteDocRef
+            .delete()
+            .then(() => {
+              console.log("Document Deleted");
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+
+          const deleteImageRef = firebase
+            .storage()
+            .refFromURL(campaignImageURL);
+          deleteImageRef
+            .delete()
+            .then(() => {
+              console.log("Image Deleted");
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+
+          const userRef = firebase
+            .firestore()
+            .collection("UserDetails")
+            .doc(userPAddress);
+          userRef.update({
+            created: firebase.firestore.FieldValue.arrayRemove(campaignAddress),
+          });
+
+          const array = [...this.state.campaigns];
+          const itemArray = [...this.state.items];
+          const index = array.indexOf(campaignAddress);
+          if (index !== -1) {
+            array.splice(index, 1);
+            itemArray.splice(index, 1);
+            this.setState({ campaigns: array, items: itemArray });
+          }
         });
-
-      const userRef = firebase
-        .firestore()
-        .collection("UserDetails")
-        .doc(userPAddress);
-      userRef.update({
-        created: firebase.firestore.FieldValue.arrayRemove(
-          this.state.deleteCampaign
-        ),
-      });
-
-      const array = [...this.state.campaigns];
-      const itemArray = [...this.state.items];
-      const index = array.indexOf(this.state.deleteCampaign);
-      if (index !== -1) {
-        array.splice(index, 1);
-        itemArray.splice(index, 1);
-        this.setState({ campaigns: array, items: itemArray });
-      }
     } catch (err) {
       console.log(err);
     }

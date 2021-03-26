@@ -5,6 +5,7 @@ import web3 from "../../ethereum/web3";
 import { Router } from "../../routes";
 import firebase from "../../components/firebase";
 import { LoginContext } from "../../components/LoginContext";
+import InputDenomination from "../../components/inputDenominations";
 
 class CampaignNew extends Component {
   static contextType = LoginContext;
@@ -21,6 +22,8 @@ class CampaignNew extends Component {
       loading: false,
       url: "",
       extension: "",
+      mdenomination: "ether",
+      tdenomination: "ether",
     };
   }
 
@@ -41,7 +44,12 @@ class CampaignNew extends Component {
         throw new Error("Login with provided Ethereum public address");
       }
       await factory.methods
-        .createCampaign(this.state.minimumContribution)
+        .createCampaign(
+          web3.utils.toWei(
+            this.state.minimumContribution,
+            this.state.mdenomination
+          )
+        )
         .send({
           from: userPAddress,
         });
@@ -65,8 +73,14 @@ class CampaignNew extends Component {
           ID: id,
           Name: this.state.name,
           Description: this.state.desc,
-          Goal: this.state.totalDonation,
-          Minimum: this.state.minimumContribution,
+          Goal: web3.utils.toWei(
+            this.state.totalDonation,
+            this.state.tdenomination
+          ),
+          Minimum: web3.utils.toWei(
+            this.state.minimumContribution,
+            this.state.mdenomination
+          ),
           isClosed: false,
           url: this.state.url,
         })
@@ -85,6 +99,13 @@ class CampaignNew extends Component {
     }
     this.setState({ loading: false });
   };
+
+  setMinimum(value, denomination) {
+    this.setState({ minimumContribution: value, mdenomination: denomination });
+  }
+  setTotal(value, denomination) {
+    this.setState({ totalDonation: value, tdenomination: denomination });
+  }
 
   render() {
     return (
@@ -120,26 +141,12 @@ class CampaignNew extends Component {
 
           <Form.Field>
             <label>Minimum Contribution</label>
-            <Input
-              label="wei"
-              labelPosition="right"
-              value={this.state.minimumContribution}
-              onChange={(event) =>
-                this.setState({ minimumContribution: event.target.value })
-              }
-            />
+            <InputDenomination setValue={this.setMinimum.bind(this)} />
           </Form.Field>
 
           <Form.Field>
             <label>Total Donation</label>
-            <Input
-              label="ether"
-              labelPosition="right"
-              value={this.state.totalDonation}
-              onChange={(event) =>
-                this.setState({ totalDonation: event.target.value })
-              }
-            />
+            <InputDenomination setValue={this.setTotal.bind(this)} />
           </Form.Field>
 
           <Message error header="Oops!" content={this.state.errorMessage} />
