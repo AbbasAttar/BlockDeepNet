@@ -1,0 +1,21 @@
+.header {
+  margin: 10px;
+  padding-bottom: 10px;
+  height: 60px;
+}
+
+.title {
+  cursor: pointer;
+}
+
+.button {
+  background-color: transparent !important;
+}
+
+.dropdown_title {
+  font-size: 16px;
+}
+
+.column_width {
+  max-width: 450px;
+}

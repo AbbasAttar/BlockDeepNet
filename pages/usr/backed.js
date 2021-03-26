@@ -3,6 +3,7 @@ import firebase from "../../components/firebase";
 import { LoginContext } from "../../components/LoginContext";
 import { Link } from "../../routes";
 import { Button, Card } from "semantic-ui-react";
+import styles from "../../css_modules/page_css/usr.module.css";
 
 export default class Backed extends Component {
   static contextType = LoginContext;
@@ -39,12 +40,7 @@ export default class Backed extends Component {
                           image: doc.data().url,
                           header: doc.data().Name,
                           extra: (
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "space-around",
-                              }}
-                            >
+                            <div className={styles.extra_div}>
                               <Link route={`/campaigns/${doc.id}`}>
                                 <a>
                                   <Button primary size="tini">
@@ -104,7 +100,7 @@ export default class Backed extends Component {
         <Card.Group
           items={this.state.items}
           itemsPerRow={3}
-          style={{ margin: "0px auto" }}
+          className={styles.card}
         />
       </>
     );

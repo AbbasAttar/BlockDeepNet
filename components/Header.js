@@ -4,6 +4,7 @@ import { Link, Router } from "../routes";
 import LoginModel from "./LoginModel";
 import SignupModel from "./SignupModel";
 import { LoginContext } from "./LoginContext";
+import styles from "../css_modules/component_css/Header.module.css";
 
 const HeaderComponent = () => {
   const { userName, userPAddress, setUserName, setUserPAddress } = useContext(
@@ -13,31 +14,24 @@ const HeaderComponent = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div
-      style={{
-        margin: "10px",
-        paddingBottom: "10px",
-        height: "60px",
-      }}
-    >
+    <div className={styles.header}>
       <Header as="h1" floated="left">
         <Link route="/">
-          <div className="item" style={{ cursor: "pointer" }}>
-            BlockDeepNet
-          </div>
+          <div className="styles.title">BlockDeepNet</div>
         </Link>
       </Header>
       <Header as="h3" floated="right">
         <Link route="/campaigns/new">
-          <Button
-            content="Create Campaign"
-            style={{ backgroundColor: "transparent" }}
-          />
+          <Button content="Create Campaign" className={styles.button} />
         </Link>
 
         {userName !== "" && userName !== "undefined" ? (
           <>
-            <Dropdown text={userName} pointing style={{ fontSize: "16px" }}>
+            <Dropdown
+              text={userName}
+              pointing
+              className={styles.dropdown_title}
+            >
               <Dropdown.Menu>
                 <Link route={`/usr/${userPAddress}/created`}>
                   <Dropdown.Item text="Created" />

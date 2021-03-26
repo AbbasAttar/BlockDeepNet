@@ -1,0 +1,22 @@
+.hero {
+  display: flex;
+  justify-content: space-between;
+}
+
+.hero_div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: -100px;
+  flex: 0.8;
+}
+
+.hero_p {
+  margin-top: 25px;
+  font-size: 16px;
+}
+
+.segment_header {
+  margin-bottom: 30px;
+  text-align: center;
+}

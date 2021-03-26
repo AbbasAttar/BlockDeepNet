@@ -10,6 +10,7 @@ import {
 } from "semantic-ui-react";
 import firebase from "../components/firebase";
 import { LoginContext } from "./LoginContext";
+import styles from "../css_modules/component_css/Header.module.css";
 
 const SignupModel = () => {
   const { setUserName, setUserPAddress } = useContext(LoginContext);
@@ -41,9 +42,7 @@ const SignupModel = () => {
     <Modal
       closeIcon
       open={sOpen}
-      trigger={
-        <Button style={{ backgroundColor: "transparent" }}>Signup</Button>
-      }
+      trigger={<Button className={styles.button}>Signup</Button>}
       onClose={() => setsOpen(false)}
       onOpen={() => setsOpen(true)}
     >
@@ -53,7 +52,7 @@ const SignupModel = () => {
       <Modal.Content>
         <Segment raised>
           <Grid textAlign="center" verticalAlign="middle">
-            <Grid.Column style={{ maxWidth: 450 }}>
+            <Grid.Column className={styles.column_width}>
               <Form size="large">
                 <Segment stacked>
                   <Form.Input

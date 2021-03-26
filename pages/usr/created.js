@@ -5,6 +5,7 @@ import { Link } from "../../routes";
 import { Button, Card, Confirm } from "semantic-ui-react";
 import Campaign from "../../ethereum/campaign";
 import web3 from "../../ethereum/web3";
+import styles from "../../css_modules/page_css/usr.module.css";
 
 export default class Created extends Component {
   static contextType = LoginContext;
@@ -41,12 +42,7 @@ export default class Created extends Component {
                         image: doc.data().url,
                         header: doc.data().Name,
                         extra: (
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-around",
-                            }}
-                          >
+                          <div className={styles.extra_div}>
                             <Link route={`/campaigns/${doc.id}`}>
                               <a>
                                 <Button primary size="tini">
@@ -163,7 +159,7 @@ export default class Created extends Component {
         <Card.Group
           items={this.state.items}
           itemsPerRow={3}
-          style={{ margin: "0px auto" }}
+          className={styles.card}
         />
         <Confirm
           open={this.state.open}

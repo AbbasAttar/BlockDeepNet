@@ -10,6 +10,7 @@ import {
   Segment,
 } from "semantic-ui-react";
 import { LoginContext } from "./LoginContext";
+import styles from "../css_modules/component_css/Header.module.css";
 
 const LoginModel = () => {
   const [open, setOpen] = useState(false);
@@ -51,9 +52,7 @@ const LoginModel = () => {
     <Modal
       closeIcon
       open={open}
-      trigger={
-        <Button style={{ backgroundColor: "transparent" }}>Login</Button>
-      }
+      trigger={<Button className={styles.button}>Login</Button>}
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
     >
@@ -63,7 +62,7 @@ const LoginModel = () => {
       <Modal.Content>
         <Segment raised>
           <Grid textAlign="center" verticalAlign="middle">
-            <Grid.Column style={{ maxWidth: 450 }}>
+            <Grid.Column className={styles.column_width}>
               <Form size="large">
                 <Segment stacked>
                   <Form.Input
